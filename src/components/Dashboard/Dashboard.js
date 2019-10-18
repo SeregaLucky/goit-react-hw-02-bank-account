@@ -77,22 +77,6 @@ class Dashboard extends Component {
       return;
     }
 
-    const date = new Date();
-
-    const obj = {
-      id: shortid.generate(),
-      type: 'deposit',
-      amount,
-      date: date.toLocaleString('en-US', OPTION),
-    };
-
-    this.setState(
-      prevState => ({
-        transactions: [...prevState.transactions, obj],
-      }),
-      this.allIncome,
-    );
-
     this.makeSetStateForTransactions(amount, 'deposit', this.allIncome);
   };
 
@@ -109,22 +93,6 @@ class Dashboard extends Component {
       this.notifyNegativeNumbers();
       return;
     }
-
-    const date = new Date();
-
-    const obj = {
-      id: shortid.generate(),
-      type: 'withdraw',
-      amount,
-      date: date.toLocaleString('en-US', OPTION),
-    };
-
-    this.setState(
-      prevState => ({
-        transactions: [...prevState.transactions, obj],
-      }),
-      this.allExpenses,
-    );
 
     this.makeSetStateForTransactions(amount, 'withdraw', this.allExpenses);
   };
