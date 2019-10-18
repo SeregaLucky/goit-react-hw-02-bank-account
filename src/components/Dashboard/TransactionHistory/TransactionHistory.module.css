@@ -1,0 +1,15 @@
+.historyTable {
+  margin: 0 auto;
+  width: 600px;
+}
+.theadHeader {
+  background: #ebeef3;
+}
+.theadHeader tr {
+  width: 100%;
+}
+.theadHeader th {
+  width: 33.3333%;
+  padding: 12px 0;
+  text-transform: uppercase;
+}

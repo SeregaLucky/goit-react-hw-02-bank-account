@@ -1,0 +1,15 @@
+.item {
+}
+.itemIncome {
+  composes: item;
+  background: rgb(230, 255, 230);
+}
+.itemExpenses {
+  composes: item;
+  background: rgb(255, 230, 230);
+}
+.item td {
+  padding: 10px 0;
+  text-align: center;
+  text-transform: capitalize;
+}

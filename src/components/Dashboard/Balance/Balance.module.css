@@ -1,0 +1,21 @@
+.balance {
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+}
+.text {
+  font-size: 20px;
+  font-weight: 800;
+  color: rgb(39, 39, 39);
+}
+.textIncome {
+  composes: text;
+  color: #90c24b;
+}
+.textExpenses {
+  composes: text;
+  color: #d24052;
+}
+.text:not(:last-child) {
+  margin: 0 50px 0 0;
+}
