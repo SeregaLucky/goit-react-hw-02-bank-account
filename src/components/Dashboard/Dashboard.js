@@ -26,9 +26,6 @@ const OPTION = {
 class Dashboard extends Component {
   state = {
     transactions: [],
-    income: 0,
-    expenses: 0,
-    balance: 0,
   };
 
   notifyIfZero = () => {
@@ -49,7 +46,7 @@ class Dashboard extends Component {
     });
   };
 
-  makeSetStateForTransactions = (amount, typeNeed, cbForCalcs) => {
+  makeSetStateForTransactions = (amount, typeNeed) => {
     const date = new Date();
 
     const obj = {
@@ -59,12 +56,9 @@ class Dashboard extends Component {
       date: date.toLocaleString('en-US', OPTION),
     };
 
-    this.setState(
-      prevState => ({
-        transactions: [...prevState.transactions, obj],
-      }),
-      cbForCalcs,
-    );
+    this.setState(prevState => ({
+      transactions: [...prevState.transactions, obj],
+    }));
   };
 
   handleDeposit = amount => {
@@ -77,7 +71,7 @@ class Dashboard extends Component {
       return;
     }
 
-    this.makeSetStateForTransactions(amount, 'deposit', this.allIncome);
+    this.makeSetStateForTransactions(amount, 'deposit');
   };
 
   handleWithdraw = amount => {
@@ -85,19 +79,11 @@ class Dashboard extends Component {
       this.notifyIfZero();
       return;
     }
-    if (this.state.balance < amount) {
-      this.notifyLimitIsExceeded();
-      return;
-    }
     if (amount < 0) {
       this.notifyNegativeNumbers();
       return;
     }
 
-    this.makeSetStateForTransactions(amount, 'withdraw', this.allExpenses);
-  };
-
-  allIncome = () => {
     const { transactions } = this.state;
 
     const income = transactions.reduce((acc, transaction) => {
@@ -108,11 +94,32 @@ class Dashboard extends Component {
       return acc;
     }, 0);
 
-    this.setState({ income }, this.findBalance);
+    const expenses = transactions.reduce((acc, transaction) => {
+      if (transaction.type === 'withdraw') {
+        return acc + transaction.amount;
+      }
+
+      return acc;
+    }, 0);
+
+    if (income < expenses + amount) {
+      this.notifyLimitIsExceeded();
+      return;
+    }
+
+    this.makeSetStateForTransactions(amount, 'withdraw');
   };
 
-  allExpenses = () => {
+  render() {
     const { transactions } = this.state;
+
+    const income = transactions.reduce((acc, transaction) => {
+      if (transaction.type === 'deposit') {
+        return acc + transaction.amount;
+      }
+
+      return acc;
+    }, 0);
 
     const expenses = transactions.reduce((acc, transaction) => {
       if (transaction.type === 'withdraw') {
@@ -122,18 +129,7 @@ class Dashboard extends Component {
       return acc;
     }, 0);
 
-    this.setState({ expenses }, this.findBalance);
-  };
-
-  findBalance = () => {
-    const { income, expenses } = this.state;
     const balance = income - expenses;
-
-    this.setState({ balance });
-  };
-
-  render() {
-    const { balance, income, expenses, transactions } = this.state;
 
     return (
       <div className={styles.dashboard}>
