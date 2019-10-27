@@ -9,6 +9,8 @@ import styles from './Dashboard.module.css';
 import Controls from './Controls/Controls';
 import Balance from './Balance/Balance';
 import TransactionHistory from './TransactionHistory/TransactionHistory';
+/* import - other */
+import { saveLocalStorage, getLocalStorage } from '../../servises/localStorage';
 
 toast.configure();
 /*
@@ -27,6 +29,22 @@ class Dashboard extends Component {
   state = {
     transactions: [],
   };
+
+  componentDidMount() {
+    const transactions = getLocalStorage('transactions');
+
+    if (!transactions) return;
+
+    this.setState({ transactions });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { transactions } = this.state;
+
+    if (prevState.transactions === transactions) return;
+
+    saveLocalStorage('transactions', transactions);
+  }
 
   notifyIfZero = () => {
     toast.info('Введите сумму для проведения операции!', {
@@ -61,6 +79,18 @@ class Dashboard extends Component {
     }));
   };
 
+  findIncomeExpenses = transactions => {
+    return transactions.reduce(
+      (acc, transaction) => {
+        return {
+          ...acc,
+          [transaction.type]: acc[transaction.type] + transaction.amount,
+        };
+      },
+      { deposit: 0, withdraw: 0 },
+    );
+  };
+
   handleDeposit = amount => {
     if (!amount) {
       this.notifyIfZero();
@@ -86,23 +116,9 @@ class Dashboard extends Component {
 
     const { transactions } = this.state;
 
-    const income = transactions.reduce((acc, transaction) => {
-      if (transaction.type === 'deposit') {
-        return acc + transaction.amount;
-      }
+    const objIncomeExpenses = this.findIncomeExpenses(transactions);
 
-      return acc;
-    }, 0);
-
-    const expenses = transactions.reduce((acc, transaction) => {
-      if (transaction.type === 'withdraw') {
-        return acc + transaction.amount;
-      }
-
-      return acc;
-    }, 0);
-
-    if (income < expenses + amount) {
+    if (objIncomeExpenses.deposit < objIncomeExpenses.withdraw + amount) {
       this.notifyLimitIsExceeded();
       return;
     }
@@ -113,23 +129,10 @@ class Dashboard extends Component {
   render() {
     const { transactions } = this.state;
 
-    const income = transactions.reduce((acc, transaction) => {
-      if (transaction.type === 'deposit') {
-        return acc + transaction.amount;
-      }
+    const objIncomeExpenses = this.findIncomeExpenses(transactions);
 
-      return acc;
-    }, 0);
-
-    const expenses = transactions.reduce((acc, transaction) => {
-      if (transaction.type === 'withdraw') {
-        return acc + transaction.amount;
-      }
-
-      return acc;
-    }, 0);
-
-    const balance = income - expenses;
+    const { deposit, withdraw } = objIncomeExpenses;
+    const balance = deposit - withdraw;
 
     return (
       <div className={styles.dashboard}>
@@ -137,7 +140,7 @@ class Dashboard extends Component {
           onDeposit={this.handleDeposit}
           onWithdraw={this.handleWithdraw}
         />
-        <Balance balance={balance} income={income} expenses={expenses} />
+        <Balance balance={balance} income={deposit} expenses={withdraw} />
         <TransactionHistory items={transactions} />
       </div>
     );
