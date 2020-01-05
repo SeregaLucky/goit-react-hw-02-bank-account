@@ -21,8 +21,23 @@ class Controls extends Component {
     this.setState({ inputValue: e.target.value });
   };
 
+  clickButtonOnDeposit = () => {
+    const { onDeposit } = this.props;
+    const { inputValue } = this.state;
+
+    onDeposit(Number(inputValue));
+    this.setState({ inputValue: '' });
+  };
+
+  clickButtonOnWithdraw = () => {
+    const { onWithdraw } = this.props;
+    const { inputValue } = this.state;
+
+    onWithdraw(Number(inputValue));
+    this.setState({ inputValue: '' });
+  };
+
   render() {
-    const { onDeposit, onWithdraw } = this.props;
     const { inputValue } = this.state;
 
     return (
@@ -40,20 +55,14 @@ class Controls extends Component {
         <button
           className={styles.button}
           type="button"
-          onClick={() => {
-            onDeposit(Number(inputValue));
-            this.setState({ inputValue: '' });
-          }}
+          onClick={this.clickButtonOnDeposit}
         >
           Deposit
         </button>
         <button
           className={styles.button}
           type="button"
-          onClick={() => {
-            onWithdraw(Number(inputValue));
-            this.setState({ inputValue: '' });
-          }}
+          onClick={this.clickButtonOnWithdraw}
         >
           Withdraw
         </button>

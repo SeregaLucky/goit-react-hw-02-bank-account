@@ -9,21 +9,19 @@ import TbodyList from './TbodyList/TbodyList';
 /*
  * COMPONENT
  */
-const TransactionHistory = ({ items }) => {
-  return (
-    <table className={styles.historyTable}>
-      <thead className={styles.theadHeader}>
-        <tr>
-          <th>Transaction</th>
-          <th>Amount</th>
-          <th>Date</th>
-        </tr>
-      </thead>
+const TransactionHistory = ({ items }) => (
+  <table className={styles.historyTable}>
+    <thead className={styles.theadHeader}>
+      <tr>
+        <th>Transaction</th>
+        <th>Amount</th>
+        <th>Date</th>
+      </tr>
+    </thead>
 
-      <TbodyList items={items} />
-    </table>
-  );
-};
+    <TbodyList items={items} />
+  </table>
+);
 
 TransactionHistory.propTypes = {
   items: T.arrayOf(T.shape).isRequired,

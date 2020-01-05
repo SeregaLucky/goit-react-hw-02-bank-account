@@ -8,8 +8,6 @@ import Dashboard from '../Dashboard/Dashboard';
 /*
  * COMPONENT
  */
-function App() {
-  return <Dashboard />;
-}
+const App = () => <Dashboard />;
 
 export default App;

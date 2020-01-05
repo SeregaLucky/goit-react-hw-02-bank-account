@@ -7,24 +7,22 @@ import styles from './TbodyList.module.css';
 /*
  * COMPONENT
  */
-const TbodyList = ({ items }) => {
-  return (
-    <tbody>
-      {items.map(item => (
-        <tr
-          key={item.id}
-          className={
-            item.type === 'deposit' ? styles.itemIncome : styles.itemExpenses
-          }
-        >
-          <td>{item.type}</td>
-          <td>{item.amount}$</td>
-          <td>{item.date}</td>
-        </tr>
-      ))}
-    </tbody>
-  );
-};
+const TbodyList = ({ items }) => (
+  <tbody>
+    {items.map(item => (
+      <tr
+        key={item.id}
+        className={
+          item.type === 'deposit' ? styles.itemIncome : styles.itemExpenses
+        }
+      >
+        <td>{item.type}</td>
+        <td>{item.amount}$</td>
+        <td>{item.date}</td>
+      </tr>
+    ))}
+  </tbody>
+);
 
 TbodyList.propTypes = {
   items: T.arrayOf(
