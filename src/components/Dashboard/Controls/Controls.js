@@ -17,9 +17,7 @@ class Controls extends Component {
     inputValue: '',
   };
 
-  handleChangeValue = e => {
-    this.setState({ inputValue: e.target.value });
-  };
+  handleChangeValue = e => this.setState({ inputValue: e.target.value });
 
   clickButtonOnDeposit = () => {
     const { onDeposit } = this.props;
